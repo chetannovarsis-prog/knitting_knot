@@ -64,7 +64,7 @@ const Home = () => {
             Array(6).fill(0).map((_, i) => <CircularCollectionSkeleton key={i} />)
           ) : (
             <>
-              {collections.slice(0, 6).map((collection) => (
+              {Array.isArray(collections) && collections.slice(0, 6).map((collection) => (
                 <Link
                   key={collection.id}
                   to={`/collections/${collection.id}`}
@@ -137,7 +137,7 @@ const Home = () => {
               {loading ? (
                 Array(5).fill(0).map((_, i) => <ProductSkeleton key={i} />)
               ) : (
-                displayProducts.slice(0, 5).map((product) => (
+                Array.isArray(displayProducts) && displayProducts.slice(0, 5).map((product) => (
                   <Link key={product.id} to={`/products/${product.handle || product.id}`} className="group space-y-4">
                     <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-white relative">
                       <img

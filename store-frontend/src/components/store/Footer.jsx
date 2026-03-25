@@ -59,7 +59,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-zinc-800 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-gray-500 text-[0.75rem]">
-          <p>© 2026 VOGUE. All rights reserved.</p>
+          <p>© 2026 Knitting Knot. All rights reserved.</p>
           <div className="flex gap-8">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
