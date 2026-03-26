@@ -65,7 +65,7 @@ const Footer = () => {
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
-        <p className="text-center text-gray-500 text-[0.9rem] mt-1">Crafted with ❤️ by <a href="https://www.novarsis.com" target="_blank" rel="noopener noreferrer" className="hover:text-white text-gray-100 font-bold transition-colors animate-pulse">Novarsis Technologies</a></p>
+        <p className="text-center text-gray-500 text-[0.9rem] mt-1">Crafted with ❤️ by <a href="https://www.novarsistech.com" target="_blank" rel="noopener noreferrer" className="hover:text-white text-gray-100 font-bold transition-colors animate-pulse">Novarsis Technologies</a></p>
       </div>
     </footer>
   );

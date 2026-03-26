@@ -112,7 +112,7 @@ export const useStore = create(
       },
     }),
     {
-      name: 'vogue-store-storage',
+      name: 'knitting-knot-storage',
     }
   )
 );

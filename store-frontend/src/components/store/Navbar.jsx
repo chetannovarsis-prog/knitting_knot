@@ -124,16 +124,16 @@ const Navbar = () => {
     <Link 
       key={col.id || col.name} 
       to={col.to || `/collections/${col.id}`}
-      className="flex flex-col items-center gap-3 flex-shrink-0 group w-20 md:w-24"
+      className="flex flex-col items-center gap-2 flex-shrink-0 group w-16 md:w-20"
     >
-      <div className={`w-18 h-18 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-gray-50 transition-all p-0.5 shadow-sm bg-white`}>
+      <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border border-gray-100 transition-all p-[1px] bg-white ring-2 ring-transparent group-hover:ring-black/10 shadow-sm`}>
         <img 
           src={col.imageUrl} 
           className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-700" 
           alt={col.name} 
         />
       </div>
-      <span className="text-center text-xs font-semibold text-gray-900 group-hover:text-black transition-colors">
+      <span className="text-center text-[0.6rem] md:text-[0.7rem] font-bold text-gray-900 group-hover:text-black transition-colors uppercase tracking-widest line-clamp-1 w-full px-1">
         {col.name}
       </span>
     </Link>
@@ -236,7 +236,7 @@ const Navbar = () => {
 
             <Link to="/cart" className="relative group cursor-pointer transition-transform active:scale-95">
               <ShoppingBag size={24} className="group-hover:opacity-50 transition-opacity" />
-              {cart.length > 0 && (
+              {cart.length > 0 && localStorage.getItem('customer') && (
                 <span className="absolute -top-1.5 -right-1.5 bg-yellow-400 text-black text-[0.7rem] w-5 h-5 rounded-full flex items-center justify-center shadow-lg">
                   {cart.length}
                 </span>
@@ -283,7 +283,7 @@ const Navbar = () => {
       {location.pathname !== '/about' && location.pathname !== '/contact' && (
         <div className="bg-white/100 mt-[70px] md:mt-[65px] border-b border-gray-50 relative z-10">
           <div className="container mx-auto px-2 overflow-hidden">
-            <div className="flex overflow-x-auto gap-4 md:gap-3 pt-6 pb-4 no-scrollbar items-start justify-start md:justify-center">
+            <div className="flex overflow-x-auto gap-6 md:gap-10 pt-6 pb-6 no-scrollbar items-start justify-start md:justify-center px-4">
               {specialCollections.map(col => renderCollectionItem(col, true))}
               {collections.slice(0, 8).map(col => renderCollectionItem(col))}
             </div>
