@@ -139,8 +139,8 @@ const ShoppableVideo = () => {
       <div className="max-w-full mx-auto md:px-10 px-4">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic">Shop The Look</h2>
-            <p className="text-[0.6rem] md:text-xs font-black text-gray-400 uppercase tracking-widest mt-2">Tap to shop your favorite styles</p>
+            <h2 className="text-3xl md:text-4xl font-black  mb-4 ">Shop The Look</h2>
+            <p className=" text-xl text-gray-500">Tap to shop your favorite styles</p>
           </div>
           <div className="flex gap-4">
             <button 
@@ -276,20 +276,19 @@ const ShoppableVideo = () => {
                   {/* Color Selector */}
                   <div>
                     <h4 className="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Color</h4>
-                    <div className="flex gap-3">
-                       {selectedVideo.product?.variants?.map(v => {
+                    <div className="flex gap-3 flex-wrap">
+                       {Array.from(new Set(selectedVideo.product?.variants?.map(v => {
                          const colorMatch = v.title.match(/color:\s*([^,]+)/i);
-                         const color = colorMatch ? colorMatch[1].trim() : v.title;
-                         return (
-                            <button 
-                              key={v.id}
-                              onClick={() => setSelectedColor(v.title)}
-                              className={`px-4 py-2 border-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${selectedColor === v.title ? 'border-black bg-black text-white' : 'border-gray-100 hover:border-black'}`}
-                            >
-                              {color}
-                            </button>
-                         );
-                       })}
+                         return colorMatch ? colorMatch[1].trim() : v.title;
+                       }))).map(color => (
+                          <button 
+                            key={color}
+                            onClick={() => setSelectedColor(color)}
+                            className={`px-4 py-2 border-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${selectedColor === color || selectedColor.includes(color) ? 'border-black bg-black text-white' : 'border-gray-100 hover:border-black'}`}
+                          >
+                            {color}
+                          </button>
+                       ))}
                     </div>
                   </div>
 

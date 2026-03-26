@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#111] text-white pt-24 pb-12">
+    <footer className="bg-gray-900 text-white pt-24 pb-12">
       <div className="max-w-[1400px] mx-auto px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16 mb-20">
           <div className="lg:col-span-2">
-            <Link to="/" className="mb-8 block w-[150px]"><img src="/images/logo3.png" alt="" /></Link>
+            <Link to="/" className="mb-8 block w-[250px]"><img src="/images/logo_white.png" alt="" /></Link>
             <p className="text-gray-400 text-[0.9rem] leading-7 max-w-sm">
               Premium fashion for the modern individual. Quality craftsmanship and timeless style, delivered to your doorstep.
             </p>
@@ -25,10 +25,10 @@ const Footer = () => {
           <div>
             <h4 className="font-bold mb-8 uppercase text-xs tracking-widest text-white">Shop</h4>
             <ul className="space-y-4 text-gray-400 text-[0.85rem]">
-              <li><Link to="/new-arrivals" className="hover:text-white transition-colors">New Arrivals</Link></li>
-              <li><Link to="/shop" className="hover:text-white transition-colors">Best Sellers</Link></li>
-              <li><Link to="/shop" className="hover:text-white transition-colors">Men's Collection</Link></li>
-              <li><Link to="/shop" className="hover:text-white transition-colors">Women's Collection</Link></li>
+              <li><Link to="/collections/all" className="hover:text-white transition-colors">New Arrivals</Link></li>
+              <li><Link to="/collections/all" className="hover:text-white transition-colors">Best Sellers</Link></li>
+              <li><Link to="/collections/all" className="hover:text-white transition-colors">Men's Collection</Link></li>
+              <li><Link to="/collections/all" className="hover:text-white transition-colors">Women's Collection</Link></li>
             </ul>
           </div>
 
@@ -65,6 +65,7 @@ const Footer = () => {
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
+        <p className="text-center text-gray-500 text-[0.9rem] mt-1">Crafted with ❤️ by <a href="https://www.novarsis.com" target="_blank" rel="noopener noreferrer" className="hover:text-white text-gray-100 font-bold transition-colors animate-pulse">Novarsis Technologies</a></p>
       </div>
     </footer>
   );

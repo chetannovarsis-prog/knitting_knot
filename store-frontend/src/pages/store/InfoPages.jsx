@@ -72,8 +72,56 @@ export const Returns = () => (
 export const Shop = () => <ComingSoon title="Shop" />;
 export const CollectionsPage = () => <ComingSoon title="Collections" />;
 export const NewArrivals = () => <ComingSoon title="New Arrivals" />;
-export const About = () => <ComingSoon title="About Us" />;
-export const Privacy = () => <ComingSoon title="Privacy" />;
-export const Terms = () => <ComingSoon title="Terms" />;
+export const Privacy = () => (
+  <PageLayout title="Privacy Policy">
+    <section className="space-y-6">
+      <h2 className="text-2xl font-black uppercase tracking-tight">Information Collection</h2>
+      <p className="text-gray-600 font-medium leading-relaxed">
+        We collect information you provide directly to us (name, email, shipping address) to process orders and provide a personalized luxury shopping experience. 
+        Your data is encrypted and handled with the highest security standards.
+      </p>
+    </section>
+    <section className="space-y-6">
+      <h2 className="text-2xl font-black uppercase tracking-tight">Data Usage</h2>
+      <p className="text-gray-600 font-medium leading-relaxed">
+        KNITTING KNOT uses your information to fulfill orders, communicate updates, and (if opted-in) share exclusive collection previews. 
+        We never sell your personal data to third parties.
+      </p>
+    </section>
+    <section className="space-y-6">
+      <h2 className="text-2xl font-black uppercase tracking-tight">Cookies & Tracking</h2>
+      <p className="text-gray-600 font-medium leading-relaxed">
+        Our platform uses cookies to enhance navigation, analyze site usage, and remember your shopping bag preferences. 
+        You can manage cookie settings through your browser at any time.
+      </p>
+    </section>
+  </PageLayout>
+);
 
-export default { Shipping, Returns, Shop, CollectionsPage, NewArrivals, About, Privacy, Terms };
+export const Terms = () => (
+  <PageLayout title="Terms & Conditions">
+    <section className="space-y-6">
+      <h2 className="text-2xl font-black uppercase tracking-tight">Order Acceptance</h2>
+      <p className="text-gray-600 font-medium leading-relaxed">
+        All orders placed through knittingknot.com are subject to availability and acceptance. 
+        We reserve the right to refuse or cancel orders due to pricing errors or stock discrepancies.
+      </p>
+    </section>
+    <section className="space-y-6">
+      <h2 className="text-2xl font-black uppercase tracking-tight">Intellectual Property</h2>
+      <p className="text-gray-600 font-medium leading-relaxed">
+        All content on this site, including designs, photography, and the "KNITTING KNOT" mark, is our intellectual property. 
+        Unauthorized reproduction is strictly prohibited.
+      </p>
+    </section>
+    <section className="space-y-6">
+      <h2 className="text-2xl font-black uppercase tracking-tight">Limitation of Liability</h2>
+      <p className="text-gray-600 font-medium leading-relaxed">
+        KNITTING KNOT shall not be liable for any indirect, incidental, or consequential damages arising from the use of our products 
+        beyond the purchase price of the specific item.
+      </p>
+    </section>
+  </PageLayout>
+);
+
+export default { Shipping, Returns, Shop, CollectionsPage, NewArrivals, Privacy, Terms };

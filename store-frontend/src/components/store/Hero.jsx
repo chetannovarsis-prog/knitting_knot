@@ -53,7 +53,7 @@ const Hero = () => {
     {
       type: 'fashion',
       content: (
-        <section className="relative h-[80vh] flex items-center justify-center bg-[#f7f3f0] overflow-hidden">
+        <section className="relative h-full w-full flex items-center justify-center bg-[#f7f3f0] overflow-hidden">
           <div className="absolute inset-0 w-full h-full pointer-events-none">
             <div className="absolute top-[10%] left-[15%] w-[300px] h-[450px] overflow-hidden shadow-2xl transition-transform duration-500 -rotate-3 hover:rotate-0 z-10">
               <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" alt="Fashion 1" className="w-full h-full object-cover shadow-2xl" />
@@ -66,12 +66,12 @@ const Hero = () => {
             </div>
           </div>
           <div className="relative z-20 text-center select-none flex flex-col items-center">
-            <h1 className="text-[10rem] md:text-[15rem] font-black text-[#111] tracking-tighter leading-[0.8] uppercase opacity-90">
+            <h1 className="text-[10rem] md:text-[15rem] font-bold text-[#111] tracking-tighter leading-[0.8] uppercase opacity-90">
               FASHION
             </h1>
             <button
               onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
-              className="mt-10 px-12 py-5 bg-black text-white text-[0.7rem] font-black uppercase tracking-[4px] hover:bg-zinc-800 transition-all active:scale-95 shadow-2xl shadow-black/20 pointer-events-auto"
+              className="mt-10 px-12 py-5 bg-black text-white text-[0.7rem] font-bold uppercase tracking-[4px] hover:bg-zinc-800 transition-all active:scale-95 shadow-2xl shadow-black/20 pointer-events-auto"
             >
               Explore Collection
             </button>
@@ -90,7 +90,7 @@ const Hero = () => {
       alt: b.altText || 'Banner'
     }));
 
-  const slides = activeBanners.length > 0 ? activeBanners : defaultSlides;
+  const slides = activeBanners.length > 0 ? [...activeBanners, ...defaultSlides] : defaultSlides;
 
 
   useEffect(() => {
@@ -117,13 +117,13 @@ const Hero = () => {
        <svg xmlns="http://www.w3.org/2000/svg" className="fill-white" width="15" height="20" viewBox="0 0 15 20">
          <path d="M14.5833 8H8.61742L9.94318 0L0 12H5.96591L4.64015 20L14.5833 8"></path>
        </svg>
-       <span className="text-[0.65rem] font-black uppercase tracking-[5px] text-white ml-4 font-['Albert_Sans']">{text}</span>
+       <span className="text-[0.65rem] font-bold uppercase tracking-[5px] text-white ml-4">{text}</span>
     </div>
   );
 
   return (
-    <div className="relative font-['Albert_Sans']">
-      <section className="relative h-[95vh] overflow-hidden bg-[#f7f3f0] cursor-grab active:cursor-grabbing">
+    <div className="relative">
+      <section className="relative h-[65vh] md:h-[75vh] min-h-[500px] overflow-hidden bg-[#f7f3f0] cursor-grab active:cursor-grabbing">
         <motion.div
           className="h-full w-full"
           drag="x"
@@ -134,10 +134,10 @@ const Hero = () => {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
-              initial={{ opacity: 0, x: 200 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -200 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
               className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
             >
               <div className="w-full h-full pointer-events-auto">
@@ -167,13 +167,13 @@ const Hero = () => {
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-6 z-30 pointer-events-none">
           <button 
             onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)} 
-            className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-black hover:bg-white/30 transition-all active:scale-95 shadow-lg ring-1 ring-black/5 pointer-events-auto"
+            className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-black hover:bg-white/40 transition-all active:scale-95 shadow-lg ring-1 ring-black/5 pointer-events-auto"
           >
             <ChevronLeft size={24} />
           </button>
           <button 
             onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)} 
-            className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-black hover:bg-white/30 transition-all active:scale-95 shadow-lg ring-1 ring-black/5 pointer-events-auto"
+            className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-black hover:bg-white/40 transition-all active:scale-95 shadow-lg ring-1 ring-black/5 pointer-events-auto"
           >
             <ChevronRight size={24} />
           </button>
@@ -191,22 +191,24 @@ const Hero = () => {
         </div>
       </section>
 
-      {/* Marquee Section */}
-      <div className="bg-black py-4 overflow-hidden whitespace-nowrap border-y border-white/5">
-        <motion.div
-          animate={{ x: [0, -2000] }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="inline-block"
-        >
-          <div className="flex">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <React.Fragment key={i}>
-                <MarqueeItem text="your new favorites fit" />
-                <MarqueeItem text="limited period offer" />
-              </React.Fragment>
-            ))}
+      {/* Stats row */}
+      <div className="bg-white border-b border-gray-100 py-12">
+        <div className="container mx-auto px-6 md:px-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+            <div className="space-y-2 group">
+               <h3 className="text-3xl md:text-4xl font-bold text-black tracking-tighter group-hover:text-[#c36a4e]  transition-all duration-300">7 Lakh+</h3>
+               <p className="text-[0.7rem] font-medium text-gray-400 uppercase tracking-[0.2em] group-hover:text-black transition-colors duration-300">Happy Customers</p>
+            </div>
+            <div className="space-y-2 border-y md:border-y-0 md:border-x border-gray-100 py-8 md:py-0 md:px-12 group text-center">
+               <h3 className="text-3xl md:text-4xl font-bold text-black tracking-tighter group-hover:text-[#c36a4e]  transition-all duration-300">20,000+</h3>
+               <p className="text-[0.7rem] font-medium text-gray-400 uppercase tracking-[0.2em] group-hover:text-black transition-colors duration-300">Pincodes Reached</p>
+            </div>
+            <div className="space-y-2 group text-center md:text-right">
+               <h3 className="text-3xl md:text-4xl font-bold text-black tracking-tighter group-hover:text-[#c36a4e]  transition-all duration-300">15 Lakh+</h3>
+               <p className="text-[0.7rem] font-medium text-gray-400 uppercase tracking-[0.2em] group-hover:text-black transition-colors duration-300">Products Delivered</p>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

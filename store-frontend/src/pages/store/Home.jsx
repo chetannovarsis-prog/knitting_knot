@@ -13,6 +13,8 @@ const Home = () => {
   const [collections, setCollections] = useState([]);
   const [bestSellers, setBestSellers] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
+  const [bottomWear, setBottomWear] = useState([]);
+  const [topWear, setTopWear] = useState([]);
   const [activeTab, setActiveTab] = useState('best-sellers');
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +39,10 @@ const Home = () => {
         if (newRes.status === 'fulfilled') {
           setNewArrivals(newRes.value.data);
         }
+        // Mocking/Filtering for Bottom/Top wear if they don't have specific endpoints
+        // In a real app, you'd fetch by collection tag or category
+        setBottomWear(newRes.value.data?.filter(p => p.category?.toLowerCase().includes('bottom') || p.name?.toLowerCase().includes('pant') || p.name?.toLowerCase().includes('lower')) || []);
+        setTopWear(newRes.value.data?.filter(p => p.category?.toLowerCase().includes('top') || p.name?.toLowerCase().includes('shirt') || p.name?.toLowerCase().includes('kurta')) || []);
       } catch (error) {
         console.error('Error fetching home data:', error);
       } finally {
@@ -46,14 +52,20 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const displayProducts = activeTab === 'best-sellers' ? bestSellers : newArrivals;
+  const displayProducts = activeTab === 'best-sellers' 
+    ? bestSellers 
+    : activeTab === 'new-arrivals' 
+    ? newArrivals 
+    : activeTab === 'bottom-wear'
+    ? bottomWear
+    : topWear;
 
   return (
     <div className="bg-white font-['Albert_Sans']">
       <Hero />
 
       {/* SHOP BY COLLECTIONS (Circular Style) */}
-      <section className="py-24 container mx-auto px-6 overflow-hidden">
+      {/* <section className="py-24 container mx-auto px-6 overflow-hidden">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-black uppercase tracking-tight italic">Shop By Collections</h2>
           <div className="w-16 h-1 bg-black mx-auto mt-4"></div>
@@ -81,7 +93,7 @@ const Home = () => {
                 </Link>
               ))}
 
-              {/* Discover More Circle */}
+             
               <Link
                 to="/collections"
                 className="flex flex-col items-center gap-4 group"
@@ -95,32 +107,42 @@ const Home = () => {
             </>
           )}
         </div>
-      </section>
+      </section> */}
 
       {/* Featured Products Tabs */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-[#f6f3f1]">
         <div className="container mx-auto px-10">
           <div className="flex flex-col items-center mb-16">
-            <div className="flex gap-10 md:gap-16 border-b border-gray-100 w-full justify-center mb-12">
+            <div className="flex flex-wrap gap-4 md:gap-8 w-full justify-center mb-12">
               <button
                 onClick={() => setActiveTab('best-sellers')}
-                className={`pb-4 text-[0.7rem] font-black uppercase tracking-[0.3em] transition-all relative ${activeTab === 'best-sellers' ? 'text-black' : 'text-gray-300 hover:text-gray-500'}`}
+                className={`px-4 py-2 text-sm transition-all duration-300 rounded-2xl border ${activeTab === 'best-sellers' ? 'bg-white text-black shadow-xs scale-105' : 'border-gray-100 hover:shadow-xl hover:text-orange-600 hover:translate-y-[-2px] hover:bg-orange-50'}`}
               >
                 Best Sellers
-                {activeTab === 'best-sellers' && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-black" />}
+              </button>
+              <button
+                onClick={() => setActiveTab('bottom-wear')}
+               className={`px-4 py-2 text-sm transition-all duration-300 rounded-2xl border ${activeTab === 'bottom-wear' ? 'bg-white text-black shadow-xs scale-105' : 'border-gray-100 hover:shadow-xl hover:text-orange-600 hover:translate-y-[-2px] hover:bg-orange-50'}`}
+              >
+                Bottom Wear
               </button>
               <button
                 onClick={() => setActiveTab('new-arrivals')}
-                className={`pb-4 text-[0.7rem] font-black uppercase tracking-[0.3em] transition-all relative ${activeTab === 'new-arrivals' ? 'text-black' : 'text-gray-300 hover:text-gray-500'}`}
+                className={`px-4 py-2 text-sm transition-all duration-300 rounded-2xl border ${activeTab === 'new-arrivals' ? 'bg-white text-black shadow-xs scale-105' : 'border-gray-100 hover:shadow-xl hover:text-orange-600 hover:translate-y-[-2px] hover:bg-orange-50'}`}
               >
-                New Arrival
-                {activeTab === 'new-arrivals' && <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-1 bg-black" />}
+                New Arrivals
+              </button>
+              <button
+                onClick={() => setActiveTab('top-wear')}
+                className={`px-4 py-2 text-sm transition-all duration-300 rounded-2xl border ${activeTab === 'top-wear' ? 'bg-white text-black shadow-xs scale-105' : 'border-gray-100 hover:shadow-xl hover:text-orange-600 hover:translate-y-[-2px] hover:bg-orange-50'}`}
+              >
+                Top Wear
               </button>
             </div>
-            <h2 className="text-4xl font-black uppercase tracking-tighter mb-4 italic">
+            <h2 className="text-4xl font-semibold mb-4 ">
               {activeTab === 'best-sellers' ? 'Popular Picks' : 'Latest Drops'}
             </h2>
-            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
+            <p className="text-xl font-semibold text-gray-400 ">
               {activeTab === 'best-sellers' ? 'Most loved by our community' : 'Fresh styles just landed in our store'}
             </p>
           </div>
@@ -137,36 +159,42 @@ const Home = () => {
               {loading ? (
                 Array(5).fill(0).map((_, i) => <ProductSkeleton key={i} />)
               ) : (
-                Array.isArray(displayProducts) && displayProducts.slice(0, 5).map((product) => (
-                  <Link key={product.id} to={`/products/${product.handle || product.id}`} className="group space-y-4">
-                    <div className="aspect-[3/4] overflow-hidden rounded-2xl bg-white relative">
-                      <img
-                        src={product.thumbnailUrl || product.images?.[0]}
-                        className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${product.hoverThumbnailUrl || product.images?.[1] ? 'absolute inset-0 group-hover:opacity-0' : ''}`}
-                        alt={product.name}
-                      />
-                      {(product.hoverThumbnailUrl || product.images?.[1]) && (
+                Array.isArray(displayProducts) && displayProducts.length > 0 ? (
+                  displayProducts.slice(0, 10).map((product) => (
+                    <Link key={product.id} to={`/products/${product.handle || product.id}`} className="group space-y-4 px-3 py-1 pb-4 rounded-2xl transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:bg-white border border-transparent hover:border-gray-50 hover:cursor-pointer hover:scale-105 hover:shadow-orange-300/50">
+                      <div className="aspect-[3/4] overflow-hidden rounded-xl bg-gray-50 relative">
                         <img
-                          src={product.hoverThumbnailUrl || product.images?.[1]}
-                          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                          alt={`${product.name} hover`}
+                          src={product.thumbnailUrl || product.images?.[0]}
+                          className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${product.hoverThumbnailUrl || product.images?.[1] ? 'absolute inset-0 group-hover:opacity-0' : ''}`}
+                          alt={product.name}
                         />
-                      )}
-                      {product.isDiscountable && (
-                        <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded-full text-[0.6rem] font-black uppercase tracking-widest shadow-lg">Sale</div>
-                      )}
-                      <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300"></div>
-                    </div>
-                    <div>
-                      <h4 className="text-[0.7rem] font-black uppercase tracking-tight text-gray-900">{product.name}</h4>
-                      <p className="text-[0.6rem] text-gray-400 font-bold uppercase tracking-widest mt-1">{product.subtitle || 'Essential Piece'}</p>
-                      <div className="flex items-center gap-4 mt-2">
-                        <span className="text-xs font-black">₹{product.price}</span>
-                        {product.isDiscountable && <span className="text-[0.65rem] text-gray-300 line-through">₹{product.price + (product.discountPrice || 0)}</span>}
+                        {(product.hoverThumbnailUrl || product.images?.[1]) && (
+                          <img
+                            src={product.hoverThumbnailUrl || product.images?.[1]}
+                            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                            alt={`${product.name} hover`}
+                          />
+                        )}
+                        {product.isDiscountable && (
+                          <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 rounded-full text-[0.6rem] font-black uppercase tracking-widest shadow-lg">Sale</div>
+                        )}
                       </div>
-                    </div>
-                  </Link>
-                ))
+                      <div className="px-1 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                        <h4 className="text-[0.65rem] md:text-[0.7rem] font-black uppercase tracking-tight text-gray-900 line-clamp-1">{product.name}</h4>
+                        <p className="text-[0.55rem] text-gray-400 font-bold uppercase tracking-widest mt-1">{product.subtitle || 'Essential Piece'}</p>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="text-xs font-black">₹{product.price}</span>
+                          {product.isDiscountable && <span className="text-[0.65rem] text-gray-300 line-through">₹{product.price + (product.discountPrice || 0)}</span>}
+                        </div>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="col-span-full py-32 text-center bg-gray-50/50 rounded-[2rem] border-2 border-dashed border-gray-100">
+                    <p className="text-2xl md:text-3xl font-black text-gray-200 uppercase tracking-[0.4em] animate-pulse">Coming Soon..........</p>
+                    <p className="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest mt-4 italic-none">We are currently curating this collection</p>
+                  </div>
+                )
               )}
             </motion.div>
           </AnimatePresence>
@@ -180,31 +208,74 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section>    
+       
+       {/* Benefits Section */}
+      <Benefits />
 
-      {/* Shop The Style - Lookbook Grid */}
-      <section className="py-24">
-        <div className="container mx-auto px-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-black uppercase tracking-tighter mb-4 italic italic">Shop The Style</h2>
-            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Curated looks for every occasion</p>
+      {/* Get to Know Us Better Section */}
+      <section className="py-8 bg-[#fafafa]">
+        <div className="px-6 md:px-10">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-black  mb-4">Get to know us better</h2>
+            <p className="text-xl text-gray-500">A closer look at who we are.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-[600px]">
-            <div className="lg:col-span-1 h-full rounded-2xl overflow-hidden shadow-2xl transform rotate-1">
-              <img src="https://images.unsplash.com/photo-1539109132374-3484594a2829?q=80&w=1920&auto=format&fit=crop" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="" />
-            </div>
-            <div className="lg:col-span-1 mt-12 h-full rounded-2xl overflow-hidden shadow-2xl transform -rotate-1">
-              <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1920&auto=format&fit=crop" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="" />
-            </div>
-            <div className="lg:col-span-1 h-full rounded-2xl overflow-hidden shadow-2xl transform rotate-2">
-              <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1920&auto=format&fit=crop" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="" />
-            </div>
-            <div className="lg:col-span-1 mt-12 h-full rounded-2xl overflow-hidden shadow-2xl transform -rotate-2">
-              <img src="https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?q=80&w=1920&auto=format&fit=crop" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="" />
-            </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { title: 'About Us', img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070', link: "/about" },
+              { title: 'Our Journey', img: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070', link: "#" },
+              { title: 'Our Store', img: '/images/knitting_knot.png', link: "/contact" },
+            ].map(item => (
+              <div key={item.title} className="relative aspect-[4/3] rounded-xl overflow-hidden group shadow-lg">
+                <img src={item.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-8">
+                   <Link 
+                     to={item.link} 
+                     className={`px-6 py-2 rounded-full text-[0.6rem] font-black uppercase tracking-widest transition-all shadow-xl ${item.link === '#' ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white/90 backdrop-blur-sm text-black hover:bg-black hover:text-white'}`}
+                     onClick={(e) => item.link === '#' && e.preventDefault()}
+                   >
+                      {item.link === '#' ? 'Coming Soon' : item.title}
+                   </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* The Journal Section */}
+      {/* <section className="py-24 bg-white">
+        <div className="container mx-auto px-6 md:px-10">
+           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-4 italic">The Journal</h2>
+                <p className="text-[0.6rem] md:text-[0.7rem] font-bold text-gray-400 uppercase tracking-[0.2em]">Threads of thoughtful living</p>
+              </div>
+              <Link to="/blog" className="text-[0.65rem] font-black uppercase tracking-widest border-b-2 border-black pb-1 hover:opacity-60 transition-opacity">
+                View All Stories
+              </Link>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+             {[
+               { title: 'SAADAA JEEVAN', desc: 'Saree Jivan: Living with intention and grace.', img: 'https://images.unsplash.com/photo-1603189343302-e603f7add05a?q=80&w=1974' },
+               { title: 'What Is Simplicity According To You?', desc: 'Exploring the essence of a minimalist lifestyle.', img: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070' },
+               { title: 'The Art of Simple Living', desc: 'Curation of moments that matter the most.', img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070' }
+             ].map(post => (
+               <div key={post.title} className="space-y-6 group cursor-pointer">
+                 <div className="aspect-[4/5] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                    <img src={post.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="" />
+                    <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+                       <h4 className="text-[0.6rem] font-black uppercase tracking-widest text-white mb-2">{post.title}</h4>
+                       <button className="text-[0.55rem] font-black uppercase tracking-widest text-white border-b border-white pb-0.5 group-hover:tracking-[0.2em] transition-all">Read More →</button>
+                    </div>
+                 </div>
+               </div>
+             ))}
+           </div>
+        </div>
+      </section> */}
 
       {/* Shoppable Videos Section */}
       <ShoppableVideo />
@@ -212,8 +283,7 @@ const Home = () => {
       {/* Testimonials - Happy Clients */}
       <Testimonials />
 
-      {/* Benefits Section */}
-      <Benefits />
+      
 
       {/* Love Section - Banner */}
       <section className="py-24 relative overflow-hidden flex items-center justify-center">
@@ -229,7 +299,7 @@ const Home = () => {
       <section className="py-24 container mx-auto px-10">
         <div className="bg-gray-50 rounded-[3rem] overflow-hidden flex flex-col lg:flex-row shadow-2xl ring-1 ring-black/5">
           <div className="flex-1 p-16 flex flex-col justify-center">
-            <h2 className="text-4xl font-black uppercase tracking-tighter mb-4 italic italic">Our First Store in Indore</h2>
+            <h2 className="text-4xl font-semibold mb-4 ">Our First Store in Indore</h2>
             <p className="text-sm text-gray-600 leading-relaxed max-w-md mb-10">
               Experience our collection in person. Visit our standalone store in the heart of Indore for a personalized styling session and exclusive in-store designs.
             </p>
@@ -244,21 +314,21 @@ const Home = () => {
                   >
                     <MapPin size={18} /></a>
                 </div>
-                <span className="text-xs font-bold uppercase tracking-tight">C-21 Mall, AB Road, Indore</span>
+                <span className="text-md font-semibold">vikram urbane, Scheme 54, indore</span>
               </div>
-              <div className="flex items-center gap-4 group">
-                <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-black group-hover:bg-black group-hover:text-white transition-all shadow-lg">
+              <a href="tel:+918878887015" className="flex items-center gap-4 group">
+                <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-black group-hover:bg-black group-hover:text-white transition-all shadow-lg font-black italic-none">
                   <Phone size={18} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-tight">+91 98765 43210</span>
-              </div>
+                <span className="text-sm font-semibold">+91 8878887015</span>
+              </a>
             </div>
 
             <div className="mt-12 flex gap-4">
               <Link to="/contact" className="bg-black text-white px-8 py-4 rounded-full text-[0.65rem] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">Get Directions</Link>
               <div className="flex gap-2">
-                <a href="#" className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-all"><Instagram size={18} /></a>
-                <a href="#" className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-all"><Facebook size={18} /></a>
+                <a href="https://www.instagram.com/knittingknot_official/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-xl active:scale-95"><Instagram size={18} /></a>
+                <a href="https://www.facebook.com/knittingknot" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-xl active:scale-95"><Facebook size={18} /></a>
               </div>
             </div>
           </div>
