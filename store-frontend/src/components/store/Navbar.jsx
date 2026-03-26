@@ -234,7 +234,7 @@ const Navbar = () => {
               )}
             </Link>
 
-            <Link to="/cart" className="relative group cursor-pointer transition-transform active:scale-95">
+            <Link to="/cart" className="relative hidden lg:flex group cursor-pointer transition-transform active:scale-95">
               <ShoppingBag size={24} className="group-hover:opacity-50 transition-opacity" />
               {cart.length > 0 && localStorage.getItem('customer') && (
                 <span className="absolute -top-1.5 -right-1.5 bg-yellow-400 text-black text-[0.7rem] w-5 h-5 rounded-full flex items-center justify-center shadow-lg">
