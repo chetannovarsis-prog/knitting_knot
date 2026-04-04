@@ -125,7 +125,7 @@ const Products = () => {
   const ViewIcon = ({ cols, active, onClick }) => (
     <button 
       onClick={onClick}
-      className={`p-1.5 rounded-sm transition-all ${active ? 'bg-black text-white' : 'text-gray-300 hover:text-black hover:bg-gray-100'}`}
+      className={`p-1.5 px-3 rounded-sm transition-all ${active ? 'bg-white text-orange-400' : 'text-gray-500 hover:text-black hover:bg-gray-100'}`}
     >
       <div className="flex gap-0.5">
         {Array.from({ length: cols }).map((_, i) => (
@@ -136,7 +136,7 @@ const Products = () => {
   );
 
   return (
-    <div className="bg-white min-h-screen italic-none">
+    <div className="bg-[#f6f3f1] font-['Albert_Sans'] min-h-screen">
       <FilterSidebar 
         isOpen={isFilterOpen} 
         onClose={() => setIsFilterOpen(false)} 
@@ -148,16 +148,16 @@ const Products = () => {
            <div className="flex flex-col md:flex-row justify-between items-center gap-8">
               <button 
                 onClick={() => setIsFilterOpen(true)}
-                className="flex items-center gap-3 px-6 py-3 border border-gray-100 rounded-sm text-[0.65rem] font-black uppercase tracking-[2px] hover:border-black transition-all group"
+                className="flex items-center gap-3 px-6 py-3 border border-gray-200 font-semibold rounded-md transition-all group hover:shadow-xl hover:translate-y-[-2px] hover:bg-orange-50 shadow-lg duration-300"
               >
-                <Filter size={14} className="group-hover:rotate-180 transition-transform duration-500" /> Filter
+                <Filter size={14} className="group-hover:rotate-180 group-hover:text-orange-600 transition-transform duration-300" /> Filter
               </button>
 
               {/* View Switcher */}
-              <div className="flex items-center gap-4 bg-gray-50/50 p-1.5 rounded-md border border-gray-100">
+              <div className="flex items-center gap-4 bg-orange-50 shadow-xl p-2.5 px-5 rounded-3xl border border-gray-100">
                  <button 
                     onClick={() => setViewCols(1)}
-                    className={`p-1.5 rounded-sm transition-all ${viewCols === 1 ? 'bg-black text-white shadow-xl' : 'text-gray-300 hover:text-black'}`}
+                    className={`p-1.5 rounded-sm transition-all ${viewCols === 1 ? 'bg-white text-orange-600 shadow-xl' : 'text-gray-500 hover:text-black'}`}
                   >
                    <List size={16} />
                  </button>
@@ -171,7 +171,7 @@ const Products = () => {
                <div ref={sortRef} className="relative group min-w-[240px] z-50">
                   <button 
                     onClick={() => setIsSortOpen(!isSortOpen)}
-                    className="w-full flex items-center justify-between bg-white border border-gray-100 px-6 py-3.5 rounded-sm text-[0.65rem] font-black uppercase tracking-[2px] transition-all hover:border-black shadow-sm"
+                    className="w-full group flex items-center justify-between px-6 py-3.5 border border-gray-200 font-semibold rounded-md transition-all group hover:shadow-xl hover:bg-orange-50 shadow-lg duration-300"
                   >
                     <span className="flex items-center gap-2">
                        {sortBy === 'newest' && 'Newest First'}
@@ -180,7 +180,7 @@ const Products = () => {
                        {sortBy === 'name-az' && 'Alphabetically, A-Z'}
                        {sortBy === 'name-za' && 'Alphabetically, Z-A'}
                     </span>
-                    <ChevronDown size={14} className={`text-gray-400 transition-transform duration-300 ${isSortOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown size={18} className={`text-gray-400 transition-transform duration-300 group-hover:text-orange-600 ${isSortOpen ? 'rotate-180 text-orange-600 transition-transform duration-300' : ''}`} />
                   </button>
 
                   <AnimatePresence>
@@ -201,7 +201,7 @@ const Products = () => {
                           <button
                             key={opt.val}
                             onClick={() => { setSortBy(opt.val); setIsSortOpen(false); }}
-                            className={`w-full text-left px-6 py-3 text-[0.7rem] font-bold transition-all relative group/item flex items-center ${sortBy === opt.val ? 'bg-gray-50 text-black' : 'text-gray-400 hover:bg-gray-50 hover:text-black'}`}
+                            className={`w-full text-left px-6 py-3 text-xs font-bold transition-all relative group/item flex items-center ${sortBy === opt.val ? 'bg-gray-50 text-black' : 'text-gray-400 hover:bg-gray-50 hover:text-black'}`}
                           >
                             {/* Hover/Active indicator bar */}
                             <div className={`absolute left-0 top-0 bottom-0 w-1 bg-black transition-opacity ${sortBy === opt.val ? 'opacity-100' : 'opacity-0 group-hover/item:opacity-100'}`} />
@@ -214,8 +214,8 @@ const Products = () => {
                </div>
            </div>
 
-           <div className="text-center space-y-4">
-               <h1 className="text-5xl font-black uppercase tracking-tight">
+           <div className="text-center space-y-4 mt-10">
+               <h1 className="text-5xl font-black text-center">
                  {collection ? collection.name : 'Products'}
                </h1>
                <p className="text-[0.6rem] text-gray-400 font-bold uppercase tracking-[4px]">

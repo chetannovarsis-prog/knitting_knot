@@ -7,6 +7,9 @@ import api from '../../utils/api';
 import Sidebar from './Sidebar';
 
 
+import { ProductSkeleton, CircularCollectionSkeleton } from './Skeleton';
+
+
 const Navbar = () => {
   const { cart, wishlist, setCartOpen } = useStore();
   const navigate = useNavigate();
@@ -25,6 +28,7 @@ const Navbar = () => {
   const searchContainerRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCollections = async () => {
@@ -34,6 +38,8 @@ const Navbar = () => {
         setCollections(data.sort((a, b) => (a.order || 0) - (b.order || 0)));
       } catch (error) {
         console.error('Error fetching collections:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCollections();
@@ -124,7 +130,7 @@ const Navbar = () => {
     <Link 
       key={col.id || col.name} 
       to={col.to || `/collections/${col.id}`}
-      className="flex flex-col items-center gap-2 flex-shrink-0 group w-16 md:w-20"
+      className="flex flex-col items-center gap-2 flex-shrink-0 group w-16 md:w-20 font-['helvetica']"
     >
       <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border border-gray-100 transition-all p-[1px] bg-white ring-2 ring-transparent group-hover:ring-black/10 shadow-sm`}>
         <img 
@@ -133,16 +139,36 @@ const Navbar = () => {
           alt={col.name} 
         />
       </div>
-      <span className="text-center text-[0.6rem] md:text-[0.7rem] font-bold text-gray-900 group-hover:text-black transition-colors uppercase tracking-widest line-clamp-1 w-full px-1">
+      <span className="text-center font-medium text-sm pt-1 text-gray-900 group-hover:text-black transition-colors w-full break-words leading-tight">
         {col.name}
       </span>
     </Link>
   );
 
   const specialCollections = [
-   { name: 'Buy 3 Get 1', imageUrl: '/images/buy3_get1.gif', to: '/collections/buy-3-get-1' },
+    { name: 'Buy 3 Get 1', imageUrl: '/images/buy3_get1.gif', to: '/collections/buy-3-get-1' },
     { name: 'New', imageUrl: '/images/new_drop.gif', to: '/new-arrivals' },
   ];
+
+  const getInjectedCollections = () => {
+    let result = [...collections];
+    const buy3 = specialCollections[0];
+    const newDrop = specialCollections[1];
+
+    if (result.length >= 3) {
+      result.splice(3, 0, buy3);
+    } else {
+      result.push(buy3);
+    }
+
+    if (result.length >= 6) {
+      result.splice(6, 0, newDrop);
+    } else {
+      result.push(newDrop);
+    }
+    
+    return result;
+  };
 
   if (location.pathname === '/login' || location.pathname === '/signup') return null;
 
@@ -280,12 +306,29 @@ const Navbar = () => {
       </div>
 
       {/* Collections Circular Navigation (NON-STICKY) */}
-      {location.pathname !== '/about' && location.pathname !== '/contact' && (
+      {![
+        '/about', 
+        '/contact', 
+        '/privacy', 
+        '/returns', 
+        '/terms', 
+        '/support', 
+        '/faq', 
+        '/shipping'
+      ].includes(location.pathname) && (
         <div className="bg-white/100 mt-[70px] md:mt-[65px] border-b border-gray-50 relative z-10">
           <div className="container mx-auto px-2 overflow-hidden">
             <div className="flex overflow-x-auto gap-6 md:gap-10 pt-6 pb-6 no-scrollbar items-start justify-start md:justify-center px-4">
-              {specialCollections.map(col => renderCollectionItem(col, true))}
-              {collections.slice(0, 8).map(col => renderCollectionItem(col))}
+              {loading ? (
+                Array(8).fill(0).map((_, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0 w-16 md:w-20">
+                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gray-100 animate-pulse" />
+                    <div className="h-2 w-10 bg-gray-100 animate-pulse rounded-full" />
+                  </div>
+                ))
+              ) : (
+                getInjectedCollections().slice(0, 12).map(col => renderCollectionItem(col, specialCollections.some(sc => sc.name === col.name)))
+              )}
             </div>
           </div>
         </div>

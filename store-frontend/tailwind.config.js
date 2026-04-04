@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
+        'albert-sans': ['"Albert Sans"', 'sans-serif'],
+        // 'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
       },
     },
   },

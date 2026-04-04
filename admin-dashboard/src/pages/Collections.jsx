@@ -235,24 +235,24 @@ const Collections = () => {
           </div>
 
           <div className="overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                 <tr className="bg-gray-50/10">
-                  <th className="px-6 py-3 w-4"></th>
-                  <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Priority</th>
-                  <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Image</th>
-                  <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Name</th>
-                  <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Description</th>
-                  <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest text-center">Products</th>
-                  <th className="px-6 py-3 w-4"></th>
-                </tr>
-              </thead>
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <table className="w-full text-left border-collapse">
+                <thead>
+                   <tr className="bg-gray-50/10">
+                    <th className="px-6 py-3 w-4"></th>
+                    <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Priority</th>
+                    <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Image</th>
+                    <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Name</th>
+                    <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest">Description</th>
+                    <th className="px-6 py-3 text-[0.6rem] font-black text-gray-400 dark:text-gray-600 uppercase tracking-widest text-center">Products</th>
+                    <th className="px-6 py-3 w-4"></th>
+                  </tr>
+                </thead>
 
-              <DndContext 
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
                 <SortableContext 
                   items={collections.map(c => c.id)}
                   strategy={verticalListSortingStrategy}
@@ -284,9 +284,8 @@ const Collections = () => {
                     )}
                   </tbody>
                 </SortableContext>
-              </DndContext>
-            </table>
-
+              </table>
+            </DndContext>
           </div>
         </div>
       </main>

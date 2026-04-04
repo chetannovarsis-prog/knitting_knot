@@ -122,7 +122,16 @@ const Sales = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50 dark:divide-white/5">
-                  {sales.length > 0 ? sales.map((sale, i) => (
+                  {loading ? (
+                    <tr>
+                      <td colSpan="5" className="px-8 py-20 text-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <div className="w-10 h-10 border-4 border-black dark:border-white border-t-transparent rounded-full animate-spin" />
+                          <p className="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Loading sales record...</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : sales.length > 0 ? sales.map((sale, i) => (
                     <tr key={i} className="hover:bg-gray-50/50 dark:hover:bg-white/2 transition-colors">
                       <td className="px-8 py-4">
                         <div className="flex items-center gap-3">

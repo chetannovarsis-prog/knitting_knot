@@ -14,7 +14,9 @@ import {
   Shipping, 
   Returns, 
   Privacy, 
-  Terms 
+  Terms,
+  Support,
+  FAQ
 } from './pages/store/InfoPages';
 import About from './pages/store/About';
 import OrderSuccess from './pages/store/OrderSuccess';
@@ -91,6 +93,8 @@ function App() {
               <Route path="/returns" element={<Returns />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/faq" element={<FAQ />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -15,23 +15,25 @@ export const uploadImage = async (req, res) => {
     const fileName = `${sanitizedName}-${Date.now()}.${file.originalname.split('.').pop()}`;
 
     const { data, error } = await supabase.storage
-      .from("ecommerce")
+      .from("knittingknot")
       .upload(fileName, file.buffer, {
         contentType: file.mimetype,
         upsert: false
       });
 
     if (error) {
-      console.error('Supabase upload error:', error);
+      console.error('Supabase upload error object:', JSON.stringify(error, null, 2));
+      console.error('Bucket name used:', "knittingknot");
       return res.status(500).json({ 
         error: "Storage service error", 
-        details: error.message || error 
+        details: error.message || error,
+        raw: error 
       });
     }
 
     const { data: { publicUrl } } = supabase
       .storage
-      .from("ecommerce")
+      .from("knittingknot")
       .getPublicUrl(fileName);
 
     if (!publicUrl) {
@@ -67,7 +69,7 @@ export const deleteImage = async (req, res) => {
     }
 
     const { error } = await supabase.storage
-      .from("ecommerce")
+      .from("knittingknot")
       .remove([fileName]);
 
     if (error) {

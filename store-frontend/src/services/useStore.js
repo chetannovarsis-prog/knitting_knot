@@ -7,6 +7,9 @@ export const useStore = create(
       cart: [],
       wishlist: [],
       toast: null,
+      homeData: null, // Cache for home page data
+
+      setHomeData: (data) => set({ homeData: data }),
 
       showToast: (message, type = 'success') => {
         set({ toast: { message, type, id: Date.now() } });

@@ -120,6 +120,7 @@ const Banners = () => {
   };
 
   const saveBanner = async (banner) => {
+    console.log('Frontend saving banner:', banner);
     try {
       if (banner.isNew) {
         const { isNew, ...data } = banner;
@@ -223,6 +224,7 @@ const BannerCard = ({ banner, index, updateBannerField, removeBanner, processIma
 
   const [localFile, setLocalFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const onFileSelect = (e) => {
     const file = e.target.files[0];
@@ -232,11 +234,16 @@ const BannerCard = ({ banner, index, updateBannerField, removeBanner, processIma
     }
   };
 
-  const onUploadClick = () => {
+  const onUploadClick = async () => {
     if (localFile) {
-      processImageUpload(localFile, banner.id);
-      setLocalFile(null);
-      setPreviewUrl(null);
+      setIsUploading(true);
+      try {
+        await processImageUpload(localFile, banner.id);
+        setLocalFile(null);
+        setPreviewUrl(null);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -330,9 +337,15 @@ const BannerCard = ({ banner, index, updateBannerField, removeBanner, processIma
 
         <button 
           onClick={() => saveBanner(banner)}
-          className="w-full mt-4 flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl text-[0.65rem] font-black uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-emerald-500/20"
+          disabled={isUploading}
+          className={`w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl text-[0.65rem] font-black uppercase tracking-widest transition-all shadow-lg ${isUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 text-white hover:scale-[1.02] active:scale-95 shadow-emerald-500/20'}`}
         >
-          <Save size={14} /> Save Changes
+          {isUploading ? (
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <Save size={14} />
+          )}
+          {isUploading ? 'Uploading...' : 'Save Changes'}
         </button>
       </div>
     </div>

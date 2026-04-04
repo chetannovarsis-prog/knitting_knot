@@ -53,23 +53,27 @@ export const getBanners = async (req, res) => {
 
 export const createBanner = async (req, res) => {
   try {
+    console.log('Creating banner with data:', JSON.stringify(req.body, null, 2));
     const banner = await prisma.banner.create({
       data: req.body
     });
     res.json(banner);
   } catch (error) {
+    console.error('Create banner error:', error);
     res.status(500).json({ message: error.message });
   }
 };
 
 export const updateBanner = async (req, res) => {
   try {
+    console.log(`Updating banner ${req.params.id} with data:`, JSON.stringify(req.body, null, 2));
     const banner = await prisma.banner.update({
       where: { id: req.params.id },
       data: req.body
     });
     res.json(banner);
   } catch (error) {
+    console.error('Update banner error:', error);
     res.status(500).json({ message: error.message });
   }
 };

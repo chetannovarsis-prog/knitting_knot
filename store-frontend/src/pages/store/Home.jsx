@@ -8,15 +8,17 @@ import Benefits from '../../components/store/Benefits';
 import ShoppableVideo from '../../components/store/ShoppableVideo';
 import { ProductSkeleton, CircularCollectionSkeleton } from '../../components/store/Skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useStore } from '../../services/useStore';
 
 const Home = () => {
-  const [collections, setCollections] = useState([]);
-  const [bestSellers, setBestSellers] = useState([]);
-  const [newArrivals, setNewArrivals] = useState([]);
-  const [bottomWear, setBottomWear] = useState([]);
-  const [topWear, setTopWear] = useState([]);
+  const { homeData, setHomeData } = useStore();
+  const [collections, setCollections] = useState(homeData?.collections || []);
+  const [bestSellers, setBestSellers] = useState(homeData?.bestSellers || []);
+  const [newArrivals, setNewArrivals] = useState(homeData?.newArrivals || []);
+  const [bottomWear, setBottomWear] = useState(homeData?.bottomWear || []);
+  const [topWear, setTopWear] = useState(homeData?.topWear || []);
   const [activeTab, setActiveTab] = useState('best-sellers');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!homeData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,22 +29,34 @@ const Home = () => {
           api.get('/products/new-arrivals')
         ]);
 
+        let updatedData = { ...homeData };
+
         if (collRes.status === 'fulfilled') {
           const collectionsData = Array.isArray(collRes.value.data)
             ? collRes.value.data
             : collRes.value.data?.data || [];
-          setCollections(collectionsData.sort((a, b) => (a.order || 0) - (b.order || 0)));
+          const sorted = collectionsData.sort((a, b) => (a.order || 0) - (b.order || 0));
+          setCollections(sorted);
+          updatedData.collections = sorted;
         }
         if (bestRes.status === 'fulfilled') {
           setBestSellers(bestRes.value.data);
+          updatedData.bestSellers = bestRes.value.data;
         }
         if (newRes.status === 'fulfilled') {
           setNewArrivals(newRes.value.data);
+          updatedData.newArrivals = newRes.value.data;
+          
+          const bw = newRes.value.data?.filter(p => p.category?.toLowerCase().includes('bottom') || p.name?.toLowerCase().includes('pant') || p.name?.toLowerCase().includes('lower')) || [];
+          const tw = newRes.value.data?.filter(p => p.category?.toLowerCase().includes('top') || p.name?.toLowerCase().includes('shirt') || p.name?.toLowerCase().includes('kurta')) || [];
+          
+          setBottomWear(bw);
+          setTopWear(tw);
+          updatedData.bottomWear = bw;
+          updatedData.topWear = tw;
         }
-        // Mocking/Filtering for Bottom/Top wear if they don't have specific endpoints
-        // In a real app, you'd fetch by collection tag or category
-        setBottomWear(newRes.value.data?.filter(p => p.category?.toLowerCase().includes('bottom') || p.name?.toLowerCase().includes('pant') || p.name?.toLowerCase().includes('lower')) || []);
-        setTopWear(newRes.value.data?.filter(p => p.category?.toLowerCase().includes('top') || p.name?.toLowerCase().includes('shirt') || p.name?.toLowerCase().includes('kurta')) || []);
+        
+        setHomeData(updatedData);
       } catch (error) {
         console.error('Error fetching home data:', error);
       } finally {
@@ -62,7 +76,24 @@ const Home = () => {
 
   return (
     <div className="bg-white font-['Albert_Sans']">
-      <Hero />
+      <AnimatePresence>
+        {loading ? (
+          <motion.div 
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center"
+          >
+             <img src="/images/Logo_black.png" className="w-48 animate-pulse mb-8" alt="Logo" />
+             <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin" />
+             <p className="mt-4 text-[0.6rem] font-black uppercase tracking-[0.3em] text-gray-400">Loading Experience...</p>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Hero />
 
       {/* SHOP BY COLLECTIONS (Circular Style) */}
       {/* <section className="py-24 container mx-auto px-6 overflow-hidden">
@@ -314,7 +345,7 @@ const Home = () => {
                   >
                     <MapPin size={18} /></a>
                 </div>
-                <span className="text-md font-semibold">vikram urbane, Scheme 54, indore</span>
+                <span className="text-md font-semibold">Shop No. 03 , Vikram Urban , Vijay Nagar, Indore</span>
               </div>
               <a href="tel:+918878887015" className="flex items-center gap-4 group">
                 <div className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-black group-hover:bg-black group-hover:text-white transition-all shadow-lg font-black italic-none">
@@ -340,6 +371,9 @@ const Home = () => {
 
 
 
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
